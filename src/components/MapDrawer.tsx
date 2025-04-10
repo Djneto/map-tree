@@ -1,24 +1,16 @@
 "use client";
 
-import {
-  Drawer,
-  Button,
-  Input,
-  List,
-  Space,
-  Tooltip,
-  ColorPicker,
-  Segmented,
-} from "antd";
+import { Drawer, Button, Space, Segmented } from "antd";
 import {
   CloseOutlined,
-  PlusOutlined,
-  DeleteOutlined,
   AppstoreOutlined,
   InboxOutlined,
+  DeploymentUnitOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import Conjuntos from "./Conjuntos";
 const nomesAleatorios = [
   "Solar",
   "Lunar",
@@ -123,7 +115,28 @@ const nomesAleatorios = [
 ];
 
 const gerarNomeAleatorio = () => {
-  const base = ["Conjunto", "Grupo", "Camada"];
+  const base = [
+    "Conjunto",
+    "Grupo",
+    "Camada",
+    "Seção",
+    "Bloco",
+    "Rede",
+    "Nó",
+    "Núcleo",
+    "Estrutura",
+    "Módulo",
+    "Zona",
+    "Região",
+    "Unidade",
+    "Camada Lógica",
+    "Cluster",
+    "Malha",
+    "Estrato",
+    "Entidade",
+    "Segmento",
+    "Ponto",
+  ];
   const nome =
     base[Math.floor(Math.random() * base.length)] +
     " " +
@@ -195,7 +208,10 @@ export default function MapDrawer() {
               alignItems: "center",
             }}
           >
-            <span>Map-Tree</span>
+            <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <DeploymentUnitOutlined style={{ fontSize: 20 }} />
+              Map-Tree
+            </span>
             <Button
               type="text"
               icon={<CloseOutlined />}
@@ -219,7 +235,7 @@ export default function MapDrawer() {
                   Seleção
                 </Space>
               ),
-              value: "seleção",
+              value: "selecaoo",
             },
             {
               label: (
@@ -238,49 +254,18 @@ export default function MapDrawer() {
 
         {abaAtiva === "conjuntos" && (
           <>
-            <div style={{ marginBottom: 16 }}>
-              <Button
-                type="dashed"
-                icon={<PlusOutlined />}
-                onClick={criarConjunto}
-                block
-              >
-                Criar Conjunto
-              </Button>
-            </div>
-
-            <List
-              dataSource={conjuntos}
-              renderItem={(item) => (
-                <List.Item style={{ paddingLeft: 0, paddingRight: 0 }}>
-                  <Space style={{ width: "100%", alignItems: "center" }}>
-                    <ColorPicker
-                      value={item.cor}
-                      onChange={(color) =>
-                        atualizarCor(item.id, color.toHexString())
-                      }
-                      showText={false}
-                    />
-                    <Input
-                      value={nomeEdicao[item.id]}
-                      onChange={(e) => atualizarNome(item.id, e.target.value)}
-                      style={{ flex: 1 }}
-                    />
-                    <Tooltip title="Remover conjunto">
-                      <Button
-                        danger
-                        icon={<DeleteOutlined />}
-                        onClick={() => removerConjunto(item.id)}
-                      />
-                    </Tooltip>
-                  </Space>
-                </List.Item>
-              )}
+            <Conjuntos
+              conjuntos={conjuntos}
+              nomeEdicao={nomeEdicao}
+              criarConjunto={criarConjunto}
+              atualizarCor={atualizarCor}
+              atualizarNome={atualizarNome}
+              removerConjunto={removerConjunto}
             />
           </>
         )}
 
-        {abaAtiva === "config" && (
+        {abaAtiva === "selecaoo" && (
           <div>
             <p>Configurações do sistema (exemplo)</p>
             {/* Coloque seus inputs, switches ou qualquer outro conteúdo de configuração aqui */}
