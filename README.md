@@ -61,15 +61,36 @@ Uma aplicação web moderna construída com Next.js e TypeScript para visualizar
 
 ```
 map-tree/
-├── public/            # Arquivos estáticos
-├── src/               # Código-fonte
-├── .gitignore         # Regras de arquivos ignorados pelo Git
-├── eslint.config.mjs  # Configuração do ESLint
-├── next.config.ts     # Configuração do Next.js
-├── package.json       # Dependências do projeto
-├── tsconfig.json      # Configuração do TypeScript
-└── LICENSE            # Arquivo de licença
+├── public/                    # Arquivos estáticos e públicos
+├── src/                       # Diretório do código-fonte
+│   ├── app/                   # Diretório principal do App com o roteador do Next.js
+│   │   ├── favicon.ico        # Ícone do site
+│   │   ├── globals.css        # Estilos globais
+│   │   ├── layout.tsx         # Componente de layout raiz
+│   │   ├── page.tsx           # Componente da página inicial
+│   │   ├── page.module.css    # Estilos da página inicial
+│   │   └── providers/         # Provedores de contexto React
+│   ├── components/            # Componentes de UI reutilizáveis
+│   ├── contexts/              # Definições de contextos React
+│   ├── styles/                # Estilos globais e temas
+│   ├── types/                 # Definições de tipos TypeScript
+│   └── antd-compat.tsx        # Camada de compatibilidade com Ant Design
+├── .gitignore                 # Regras de arquivos ignorados pelo Git
+├── eslint.config.mjs         # Configuração do ESLint
+├── next.config.ts            # Configuração do Next.js
+├── package.json              # Dependências e scripts do projeto
+├── tsconfig.json             # Configuração do TypeScript
+└── LICENSE                   # Arquivo de licença
 ```
+
+### Explicação das Pastas Principais
+
+- **src/app**: Contém as rotas e páginas principais da aplicação usando o App Router do Next.js  
+- **src/components**: Componentes de UI reutilizáveis em diferentes partes da aplicação  
+- **src/contexts**: Provedores de contexto React para gerenciamento de estado  
+- **src/styles**: Estilos globais, temas e módulos CSS  
+- **src/types**: Definições e interfaces TypeScript  
+- **public**: Arquivos estáticos como imagens, fontes e outros recursos públicos  
 
 ## Contribuindo
 
