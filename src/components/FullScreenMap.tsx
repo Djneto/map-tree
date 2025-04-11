@@ -15,7 +15,7 @@ const FullScreenMap = () => {
     <div style={{ height: "100vh", width: "100vw", position: "relative" }}>
       <MapContainer
         center={[-15.793889, -47.882778]} // Brasília
-        zoom={5}
+        zoom={13}
         style={{ height: "100%", width: "100%" }}
         zoomControl={false}
       >

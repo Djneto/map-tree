@@ -80,9 +80,17 @@ const Conjuntos: React.FC<Props> = ({
       />
       <List
         dataSource={conjuntos}
+        style={{ width: "100%" }}
         renderItem={(item) => (
           <List.Item style={{ paddingLeft: 0, paddingRight: 0 }}>
-            <Space style={{ width: "100%", alignItems: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                width: "100%",
+                gap: 8,
+              }}
+            >
               <ColorPicker
                 value={item.cor}
                 onChange={(color) => atualizarCor(item.id, color.toHexString())}
@@ -100,7 +108,7 @@ const Conjuntos: React.FC<Props> = ({
                   onClick={() => removerConjunto(item.id)}
                 />
               </Tooltip>
-            </Space>
+            </div>
           </List.Item>
         )}
       />

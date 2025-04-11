@@ -82,7 +82,7 @@ const DatasetUploaderModal: React.FC<Props> = ({
 
   return (
     <>
-      {contextHolder},
+      {contextHolder}
       <Modal
         title="Importar Dataset"
         open={open}

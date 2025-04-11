@@ -1,6 +1,6 @@
 "use client";
 
-import { Drawer, Button, Space, Segmented } from "antd";
+import { Drawer, Button, Space, Segmented, Tooltip } from "antd";
 import {
   CloseOutlined,
   AppstoreOutlined,
@@ -195,9 +195,9 @@ export default function MapDrawer({ open, setOpen }: MapDrawerProps) {
   };
 
   return (
-    <>
-      <Drawer
-        title={
+    <Drawer
+      title={
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
               display: "flex",
@@ -209,65 +209,78 @@ export default function MapDrawer({ open, setOpen }: MapDrawerProps) {
               <DeploymentUnitOutlined style={{ fontSize: 20 }} />
               Map-Tree
             </span>
-            <Button
-              type="text"
-              icon={<CloseOutlined />}
-              onClick={() => setOpen(false)}
-            />
+            <Tooltip title="Fechar painel">
+              <Button
+                type="text"
+                icon={<CloseOutlined />}
+                onClick={() => setOpen(false)}
+              />
+            </Tooltip>
           </div>
-        }
-        placement="left"
-        mask={false}
-        closable={false}
-        open={open}
-        width={320}
-      >
-        <Segmented
-          block
-          options={[
-            {
-              label: (
-                <Space>
-                  <AppstoreOutlined />
-                  Seleção
-                </Space>
-              ),
-              value: "selecaoo",
-            },
-            {
-              label: (
-                <Space>
-                  <InboxOutlined />
-                  Conjuntos
-                </Space>
-              ),
-              value: "conjuntos",
-            },
-          ]}
-          value={abaAtiva}
-          onChange={(val) => setAbaAtiva(val as string)}
-          style={{ marginBottom: 16 }}
-        />
+          <span style={{ fontSize: 12, color: "#888" }}>
+            Calcule distâncias dinamicamente com KD-Tree
+          </span>
+        </div>
+      }
+      placement="left"
+      mask={false}
+      closable={false}
+      open={open}
+      width={410}
+    >
+      <Segmented
+        block
+        options={[
+          {
+            label: (
+              <Space>
+                <AppstoreOutlined />
+                Seleção
+              </Space>
+            ),
+            value: "selecaoo",
+          },
+          {
+            label: (
+              <Space>
+                <InboxOutlined />
+                Conjuntos
+              </Space>
+            ),
+            value: "conjuntos",
+          },
+        ]}
+        value={abaAtiva}
+        onChange={(val) => setAbaAtiva(val as string)}
+        style={{ marginBottom: 16 }}
+      />
 
-        {abaAtiva === "conjuntos" && (
-          <>
-            <Conjuntos
-              conjuntos={conjuntos}
-              nomeEdicao={nomeEdicao}
-              criarConjunto={criarConjunto}
-              atualizarCor={atualizarCor}
-              atualizarNome={atualizarNome}
-              removerConjunto={removerConjunto}
-            />
-          </>
-        )}
+      {abaAtiva === "conjuntos" && (
+        <>
+          <p style={{ marginBottom: 12, color: "#555" }}>
+            Crie, importe e edite conjuntos com nomes e cores personalizadas
+            para organizar os elementos do mapa.
+          </p>
+          <Conjuntos
+            conjuntos={conjuntos}
+            nomeEdicao={nomeEdicao}
+            criarConjunto={criarConjunto}
+            atualizarCor={atualizarCor}
+            atualizarNome={atualizarNome}
+            removerConjunto={removerConjunto}
+          />
+        </>
+      )}
 
-        {abaAtiva === "selecaoo" && (
-          <div>
-            <p>Configurações do sistema (exemplo)</p>
-          </div>
-        )}
-      </Drawer>
-    </>
+      {abaAtiva === "selecaoo" && (
+        <div>
+          <p style={{ marginBottom: 12, color: "#555" }}>
+            Use esta aba para visualizar ou interagir com elementos do mapa que
+            fazem parte dos conjuntos criados.
+          </p>
+          <p>Seleção (em desenvolvimento)</p>
+        </div>
+      )}
+    </Drawer>
   );
 }
