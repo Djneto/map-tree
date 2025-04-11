@@ -6,11 +6,11 @@ import {
   AppstoreOutlined,
   InboxOutlined,
   DeploymentUnitOutlined,
-  UploadOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Conjuntos from "./Conjuntos";
+
 const nomesAleatorios = [
   "Solar",
   "Lunar",
@@ -155,8 +155,12 @@ type Conjunto = {
   cor: string;
 };
 
-export default function MapDrawer() {
-  const [open, setOpen] = useState(false);
+type MapDrawerProps = {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+};
+
+export default function MapDrawer({ open, setOpen }: MapDrawerProps) {
   const [conjuntos, setConjuntos] = useState<Conjunto[]>([]);
   const [nomeEdicao, setNomeEdicao] = useState<{ [id: string]: string }>({});
   const [abaAtiva, setAbaAtiva] = useState<string>("conjuntos");
@@ -192,13 +196,6 @@ export default function MapDrawer() {
 
   return (
     <>
-      {/* Botão flutuante para abrir */}
-      <div style={{ position: "absolute", top: 20, left: 20, zIndex: 1000 }}>
-        <Button type="primary" onClick={() => setOpen(true)}>
-          Menu
-        </Button>
-      </div>
-
       <Drawer
         title={
           <div
@@ -268,7 +265,6 @@ export default function MapDrawer() {
         {abaAtiva === "selecaoo" && (
           <div>
             <p>Configurações do sistema (exemplo)</p>
-            {/* Coloque seus inputs, switches ou qualquer outro conteúdo de configuração aqui */}
           </div>
         )}
       </Drawer>

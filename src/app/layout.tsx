@@ -1,6 +1,9 @@
+import "@ant-design/v5-patch-for-react-19";
 import "antd/dist/reset.css";
 import "./globals.css";
 import { AntdThemeProvider } from "./providers/AntdThemeProvider";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import AntdCompat from "../antd-compat";
 
 export const metadata = {
   title: "map-tree",
@@ -21,7 +24,10 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <AntdThemeProvider>{children}</AntdThemeProvider>
+        <AntdCompat />
+        <ThemeProvider>
+          <AntdThemeProvider>{children}</AntdThemeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

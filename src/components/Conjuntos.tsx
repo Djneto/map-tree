@@ -27,7 +27,7 @@ interface Props {
   atualizarCor: (id: string, cor: string) => void;
   atualizarNome: (id: string, nome: string) => void;
   removerConjunto: (id: string) => void;
-  onUploadDataset?: (file: File) => void; // opcional
+  onUploadDataset?: (file: File) => void;
 }
 
 const Conjuntos: React.FC<Props> = ({
@@ -45,7 +45,7 @@ const Conjuntos: React.FC<Props> = ({
     } else {
       message.info(`Arquivo "${file.name}" carregado (simulado).`);
     }
-    return false; // impede upload automático
+    return false;
   };
   const [modalAberto, setModalAberto] = useState(false);
 
@@ -58,7 +58,7 @@ const Conjuntos: React.FC<Props> = ({
             block
             onClick={() => setModalAberto(true)}
           >
-            Upload de Dataset
+            Importar Dataset
           </Button>
           <Button
             type="dashed"
@@ -74,7 +74,7 @@ const Conjuntos: React.FC<Props> = ({
         open={modalAberto}
         onClose={() => setModalAberto(false)}
         onFinalizarUpload={(dadosProcessados) => {
-          // Aqui você pode criar um novo conjunto com os dados do CSV
+          // TODO:  criar um novo conjunto com os dados do CSV
           console.log("Dados prontos para uso:", dadosProcessados);
         }}
       />
