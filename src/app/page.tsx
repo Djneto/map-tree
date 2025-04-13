@@ -1,5 +1,5 @@
-import FullScreenMapWrapper from "@/components/FullScreenMapWrapper";
+import AppWrapper from "@/components/AppWrapper";
 
 export default function MapTree() {
-  return <FullScreenMapWrapper />;
+  return <AppWrapper />;
 }

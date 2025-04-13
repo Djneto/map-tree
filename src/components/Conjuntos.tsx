@@ -1,53 +1,23 @@
 import React, { useState } from "react";
-import {
-  List,
-  Button,
-  Input,
-  Space,
-  Tooltip,
-  ColorPicker,
-  message,
-} from "antd";
+import { List, Button, Input, Space, Tooltip, ColorPicker } from "antd";
 import {
   PlusOutlined,
   DeleteOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
 import DatasetUploaderModal from "./DataSetUploaderModal";
+import { useConjuntos } from "@/contexts/ConjuntosContext";
 
-interface Conjunto {
-  id: string;
-  cor: string;
-}
-
-interface Props {
-  conjuntos: Conjunto[];
-  nomeEdicao: Record<string, string>;
-  criarConjunto: () => void;
-  atualizarCor: (id: string, cor: string) => void;
-  atualizarNome: (id: string, nome: string) => void;
-  removerConjunto: (id: string) => void;
-  onUploadDataset?: (file: File) => void;
-}
-
-const Conjuntos: React.FC<Props> = ({
-  conjuntos,
-  nomeEdicao,
-  criarConjunto,
-  atualizarCor,
-  atualizarNome,
-  removerConjunto,
-  onUploadDataset,
-}) => {
-  const beforeUpload = (file: File) => {
-    if (onUploadDataset) {
-      onUploadDataset(file);
-    } else {
-      message.info(`Arquivo "${file.name}" carregado (simulado).`);
-    }
-    return false;
-  };
+const Conjuntos: React.FC = () => {
   const [modalAberto, setModalAberto] = useState(false);
+
+  const {
+    conjuntos,
+    criarConjunto,
+    atualizarCor,
+    atualizarNome,
+    removerConjunto,
+  } = useConjuntos();
 
   return (
     <>
@@ -63,21 +33,19 @@ const Conjuntos: React.FC<Props> = ({
           <Button
             type="dashed"
             icon={<PlusOutlined />}
-            onClick={criarConjunto}
+            onClick={() => criarConjunto()}
             block
           >
             Criar Conjunto
           </Button>
         </Space>
       </div>
+
       <DatasetUploaderModal
         open={modalAberto}
         onClose={() => setModalAberto(false)}
-        onFinalizarUpload={(dadosProcessados) => {
-          // TODO:  criar um novo conjunto com os dados do CSV
-          console.log("Dados prontos para uso:", dadosProcessados);
-        }}
       />
+
       <List
         dataSource={conjuntos}
         style={{ width: "100%" }}
@@ -97,7 +65,7 @@ const Conjuntos: React.FC<Props> = ({
                 showText={false}
               />
               <Input
-                value={nomeEdicao[item.id]}
+                value={item.nome}
                 onChange={(e) => atualizarNome(item.id, e.target.value)}
                 style={{ flex: 1 }}
               />

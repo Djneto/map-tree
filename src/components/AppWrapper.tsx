@@ -7,11 +7,13 @@ import MapDrawer from "./MapDrawer";
 import FloatingActions from "./FloatingActions";
 import { DeploymentUnitOutlined } from "@ant-design/icons";
 
+import { ConjuntosProvider } from "@/contexts/ConjuntosContext";
+
 const FullScreenMap = dynamic(() => import("./FullScreenMap"), {
   ssr: false,
 });
 
-export default function FullScreenMapWrapper() {
+export default function AppWrapper() {
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [hasMounted, setHasMounted] = useState(false); //evita renderização antes do client
@@ -50,10 +52,10 @@ export default function FullScreenMapWrapper() {
   }
 
   return (
-    <>
+    <ConjuntosProvider>
       <FullScreenMap />
       <MapDrawer open={drawerOpen} setOpen={setDrawerOpen} />
       <FloatingActions drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
-    </>
+    </ConjuntosProvider>
   );
 }

@@ -17,20 +17,18 @@ import Papa from "papaparse";
 
 import useMessage from "antd/es/message/useMessage";
 
+import { useConjuntos } from "@/contexts/ConjuntosContext";
+import { DadoGeografico } from "@/types/dadoGeografico";
+
 const { Step } = Steps;
 const { Option } = Select;
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onFinalizarUpload: (data: any[]) => void;
 }
 
-const DatasetUploaderModal: React.FC<Props> = ({
-  open,
-  onClose,
-  onFinalizarUpload,
-}) => {
+const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
   const [stepAtual, setStepAtual] = useState(0);
   const [csvData, setCsvData] = useState<any[]>([]);
   const [colunas, setColunas] = useState<string[]>([]);
@@ -38,10 +36,12 @@ const DatasetUploaderModal: React.FC<Props> = ({
   const [colLongitude, setColLongitude] = useState<string | undefined>();
   const [usarIdPersonalizado, setUsarIdPersonalizado] = useState(false);
   const [colunaId, setColunaId] = useState<string | undefined>();
-  const [nomeArquivo, setNomeArquivo] = useState<string | null>(null);
+  const [nomeArquivo, setNomeArquivo] = useState<string>("");
   const [tamanhoArquivo, setTamanhoArquivo] = useState<string | null>(null);
 
   const [messageApi, contextHolder] = useMessage();
+
+  const { criarConjunto } = useConjuntos();
 
   const handleArquivo = (file: File) => {
     Papa.parse(file, {
@@ -67,17 +67,18 @@ const DatasetUploaderModal: React.FC<Props> = ({
       return message.error("Selecione colunas para latitude e longitude.");
     }
 
-    const dadosCompletos = csvData.map((item, index) => ({
-      id: usarIdPersonalizado && colunaId ? item[colunaId] : `id-${index + 1}`,
-      latitude: item[colLatitude],
-      longitude: item[colLongitude],
-      ...item,
-    }));
+    const dadosCompletos: Array<DadoGeografico> = csvData.map(
+      (item, index) => ({
+        id: usarIdPersonalizado && colunaId ? item[colunaId] : `auto-${index}`,
+        latitude: item[colLatitude],
+        longitude: item[colLongitude],
+      })
+    );
 
-    onFinalizarUpload(dadosCompletos);
     onClose();
     setStepAtual(0);
     setCsvData([]);
+    criarConjunto(dadosCompletos, nomeArquivo);
   };
 
   return (
@@ -144,7 +145,7 @@ const DatasetUploaderModal: React.FC<Props> = ({
                       setColLatitude(undefined);
                       setColLongitude(undefined);
                       setColunaId(undefined);
-                      setNomeArquivo(null);
+                      setNomeArquivo("");
                       setTamanhoArquivo(null);
                       setUsarIdPersonalizado(false);
                     }}
