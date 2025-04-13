@@ -11,3 +11,19 @@ body {
   height: 100%;
   width: 100%;
 }
+
+.custom-segmented.danger .ant-segmented-item-selected {
+  background-color: #dc4446 !important; /* vermelho */
+  color: white !important;
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(255, 77, 79, 0.6);
+  transition: all 0.2s ease;
+}
+
+.custom-segmented:not(.danger) .ant-segmented-item-selected {
+  background-color: #1677ff !important; /* azul padrão */
+  color: white !important;
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(24, 144, 255, 0.6);
+  transition: all 0.2s ease;
+}

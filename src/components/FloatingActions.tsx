@@ -1,16 +1,20 @@
 "use client";
 
-import { Segmented, Button } from "antd";
 import {
   PlusOutlined,
   DeleteOutlined,
-  UploadOutlined,
+  AimOutlined,
   MenuOutlined,
   SunOutlined,
   MoonOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Button, Segmented, Select } from "antd";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useConjuntos } from "@/contexts/ConjuntosContext"; // ou onde quer que esteja
+
+import "../styles/globals.css";
+import { Conjunto } from "@/types/conjunto";
 
 type FloatingActionsProps = {
   drawerOpen: boolean;
@@ -21,8 +25,26 @@ export default function FloatingActions({
   drawerOpen,
   setDrawerOpen,
 }: FloatingActionsProps) {
-  const [action, setAction] = useState<string | number>("add");
+  const [action, setAction] = useState<string | number>("select");
+  const [conjuntoSelecionado, setConjuntoSelecionado] =
+    useState<Conjunto | null>(null);
   const { theme, toggleTheme } = useTheme();
+  const { conjuntos } = useConjuntos();
+
+  useEffect(() => {
+    console.log(conjuntoSelecionado);
+  });
+
+  useEffect(() => {
+    // Verifica se o conjunto selecionado ainda existe
+    if (
+      conjuntoSelecionado &&
+      !conjuntos.find((c) => c.id === conjuntoSelecionado.id)
+    ) {
+      setConjuntoSelecionado(null);
+      setAction("select");
+    }
+  }, [conjuntos]);
 
   return (
     <div
@@ -48,26 +70,41 @@ export default function FloatingActions({
         onClick={() => setDrawerOpen(!drawerOpen)}
       />
 
+      <Select
+        placeholder="Selecionar conjunto"
+        style={{ width: 180 }}
+        value={conjuntoSelecionado ? conjuntoSelecionado.nome : null}
+        onChange={(id) => {
+          const conjunto = conjuntos.find((c) => c.id === id);
+          if (conjunto) setConjuntoSelecionado(conjunto);
+        }}
+        options={conjuntos.map((c: Conjunto) => ({
+          label: c.nome,
+          value: c.id,
+        }))}
+      />
       <Segmented
         value={action}
         onChange={setAction}
-        size={"middle"}
+        size="middle"
         options={[
+          {
+            value: "select",
+            icon: <AimOutlined />,
+          },
           {
             value: "add",
             icon: <PlusOutlined />,
+            disabled: conjuntoSelecionado ? false : true,
           },
           {
             value: "remove",
             icon: <DeleteOutlined />,
-          },
-          {
-            value: "upload",
-            icon: <UploadOutlined />,
+            disabled: conjuntoSelecionado ? false : true,
           },
         ]}
+        className={`custom-segmented ${action === "remove" ? "danger" : ""}`}
       />
-
       <Button
         type="text"
         onClick={toggleTheme}
