@@ -6,10 +6,17 @@ import { namesRandom, namesSet } from "@/utils/SetBaseNames";
 
 interface ConjuntosContextType {
   conjuntos: Conjunto[];
+  conjuntoSelecionado: Conjunto | null;
+  setConjuntoSelecionado: React.Dispatch<React.SetStateAction<Conjunto | null>>;
   criarConjunto: (dados?: DadoGeografico[], nome?: string) => void;
   atualizarCor: (id: string, cor: string) => void;
   atualizarNome: (id: string, nome: string) => void;
   removerConjunto: (id: string) => void;
+  adicionarDadoAoConjuntoSelecionado: (
+    latitude: string,
+    longitude: string
+  ) => void;
+  removerDadoDoConjuntoSelecionado: (dadoId: string) => void;
 }
 
 const ConjuntosContext = createContext<ConjuntosContextType | undefined>(
@@ -18,6 +25,8 @@ const ConjuntosContext = createContext<ConjuntosContextType | undefined>(
 
 export const ConjuntosProvider = ({ children }: { children: ReactNode }) => {
   const [conjuntos, setConjuntos] = useState<Conjunto[]>([]);
+  const [conjuntoSelecionado, setConjuntoSelecionado] =
+    useState<Conjunto | null>(null);
 
   const getRandomColor = () =>
     `#${Math.floor(Math.random() * 16777215)
@@ -55,14 +64,54 @@ export const ConjuntosProvider = ({ children }: { children: ReactNode }) => {
     setConjuntos((prev) => prev.filter((c) => c.id !== id));
   };
 
+  const adicionarDadoAoConjuntoSelecionado = (
+    latitude: string,
+    longitude: string
+  ) => {
+    if (!conjuntoSelecionado) return;
+
+    const novoDado: DadoGeografico = {
+      id: uuidv4(),
+      latitude,
+      longitude,
+    };
+
+    setConjuntos((prev) =>
+      prev.map((conjunto) =>
+        conjunto.id === conjuntoSelecionado.id
+          ? { ...conjunto, dados: [...conjunto.dados, novoDado] }
+          : conjunto
+      )
+    );
+  };
+
+  const removerDadoDoConjuntoSelecionado = (dadoId: string) => {
+    if (!conjuntoSelecionado) return;
+
+    setConjuntos((prev) =>
+      prev.map((conjunto) =>
+        conjunto.id === conjuntoSelecionado.id
+          ? {
+              ...conjunto,
+              dados: conjunto.dados.filter((dado) => dado.id !== dadoId),
+            }
+          : conjunto
+      )
+    );
+  };
+
   return (
     <ConjuntosContext.Provider
       value={{
         conjuntos,
+        conjuntoSelecionado,
+        setConjuntoSelecionado,
         criarConjunto,
         atualizarCor,
         atualizarNome,
         removerConjunto,
+        adicionarDadoAoConjuntoSelecionado,
+        removerDadoDoConjuntoSelecionado,
       }}
     >
       {children}

@@ -8,13 +8,14 @@ import {
   SunOutlined,
   MoonOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button, Segmented, Select } from "antd";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useConjuntos } from "@/contexts/ConjuntosContext"; // ou onde quer que esteja
 
 import "../styles/globals.css";
 import { Conjunto } from "@/types/conjunto";
+import { useAction } from "@/contexts/ActionContext";
 
 type FloatingActionsProps = {
   drawerOpen: boolean;
@@ -25,11 +26,11 @@ export default function FloatingActions({
   drawerOpen,
   setDrawerOpen,
 }: FloatingActionsProps) {
-  const [action, setAction] = useState<string | number>("select");
-  const [conjuntoSelecionado, setConjuntoSelecionado] =
-    useState<Conjunto | null>(null);
   const { theme, toggleTheme } = useTheme();
-  const { conjuntos } = useConjuntos();
+  const { conjuntos, conjuntoSelecionado, setConjuntoSelecionado } =
+    useConjuntos();
+
+  const { action, setAction } = useAction();
 
   useEffect(() => {
     console.log(conjuntoSelecionado);

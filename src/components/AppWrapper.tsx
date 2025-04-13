@@ -8,6 +8,7 @@ import FloatingActions from "./FloatingActions";
 import { DeploymentUnitOutlined } from "@ant-design/icons";
 
 import { ConjuntosProvider } from "@/contexts/ConjuntosContext";
+import { ActionProvider } from "@/contexts/ActionContext";
 
 const FullScreenMap = dynamic(() => import("./FullScreenMap"), {
   ssr: false,
@@ -53,9 +54,14 @@ export default function AppWrapper() {
 
   return (
     <ConjuntosProvider>
-      <FullScreenMap />
-      <MapDrawer open={drawerOpen} setOpen={setDrawerOpen} />
-      <FloatingActions drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
+      <ActionProvider>
+        <FullScreenMap />
+        <MapDrawer open={drawerOpen} setOpen={setDrawerOpen} />
+        <FloatingActions
+          drawerOpen={drawerOpen}
+          setDrawerOpen={setDrawerOpen}
+        />
+      </ActionProvider>
     </ConjuntosProvider>
   );
 }
