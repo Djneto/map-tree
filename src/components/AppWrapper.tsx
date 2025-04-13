@@ -9,6 +9,7 @@ import { DeploymentUnitOutlined } from "@ant-design/icons";
 
 import { ConjuntosProvider } from "@/contexts/ConjuntosContext";
 import { ActionProvider } from "@/contexts/ActionContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const FullScreenMap = dynamic(() => import("./FullScreenMap"), {
   ssr: false,
@@ -17,7 +18,9 @@ const FullScreenMap = dynamic(() => import("./FullScreenMap"), {
 export default function AppWrapper() {
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const [hasMounted, setHasMounted] = useState(false); //evita renderização antes do client
+  const [hasMounted, setHasMounted] = useState(false);
+
+  const { theme } = useTheme(); // 👈 pega o tema atual
 
   useEffect(() => {
     setHasMounted(true);
@@ -25,9 +28,11 @@ export default function AppWrapper() {
     return () => clearTimeout(timeout);
   }, []);
 
-  if (!hasMounted) return null; //impede renderização no SSR
+  if (!hasMounted) return null;
 
   if (isLoading) {
+    const isDark = theme === "dark";
+
     return (
       <div
         style={{
@@ -37,17 +42,25 @@ export default function AppWrapper() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "#FFFFFF",
+          background: isDark ? "#1f1f1f" : "#FFFFFF",
           gap: 16,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <DeploymentUnitOutlined style={{ fontSize: 32, color: "#1890ff" }} />
-          <span style={{ fontSize: 24, fontWeight: 600, color: "#1890ff" }}>
+          <DeploymentUnitOutlined
+            style={{ fontSize: 32, color: isDark ? "#40a9ff" : "#1890ff" }}
+          />
+          <span
+            style={{
+              fontSize: 24,
+              fontWeight: 600,
+              color: isDark ? "#e6f7ff" : "#1890ff",
+            }}
+          >
             Map-Tree
           </span>
         </div>
-        <Spin size="large"></Spin>
+        <Spin size="large" />
       </div>
     );
   }
