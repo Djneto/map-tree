@@ -14,8 +14,11 @@ import { useConjuntos } from "@/contexts/ConjuntosContext";
 import L from "leaflet";
 import { EnvironmentFilled } from "@ant-design/icons";
 import ReactDOMServer from "react-dom/server";
-//import { useEffect, useState } from "react";
 import { useAction } from "@/contexts/ActionContext";
+
+interface MapaClickListenerProps {
+  onClick: (lat: number, lng: number) => void;
+}
 
 const FullScreenMap = () => {
   const { theme } = useTheme();
@@ -26,15 +29,9 @@ const FullScreenMap = () => {
   } = useConjuntos();
   const { action } = useAction();
 
-  //const [coordenadasClicadas, setCoordenadasClicadas] = useState(null);
-
   const lightTile = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
   const darkTile =
     "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-
-  // useEffect(() => {
-  //   console.log(coordenadasClicadas);
-  // }, [coordenadasClicadas]);
 
   const gerarIcone = (cor: string) =>
     L.divIcon({
@@ -55,7 +52,7 @@ const FullScreenMap = () => {
       popupAnchor: [0, -32],
     });
 
-  const MapaClickListener = ({ onClick }: any) => {
+  const MapaClickListener = ({ onClick }: MapaClickListenerProps) => {
     useMapEvents({
       click(e) {
         const { lat, lng } = e.latlng;
@@ -67,11 +64,10 @@ const FullScreenMap = () => {
   };
 
   const handleMapaClick = (lat: number, lng: number) => {
-    if (action == "add") {
+    if (action === "add") {
       adicionarDadoAoConjuntoSelecionado(lat.toString(), lng.toString());
     }
     console.log("Clicou em:", lat, lng);
-    //setCoordenadasClicadas({ lat, lng });
   };
 
   return (
@@ -101,7 +97,7 @@ const FullScreenMap = () => {
               icon={gerarIcone(conjunto.cor)}
               eventHandlers={{
                 click: () => {
-                  if (action == "remove") {
+                  if (action === "remove") {
                     removerDadoDoConjuntoSelecionado(dado.id);
                   }
                 },

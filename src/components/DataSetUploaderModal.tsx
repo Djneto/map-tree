@@ -28,9 +28,12 @@ interface Props {
   onClose: () => void;
 }
 
+// tipo genérico para os dados do CSV
+type CsvRow = Record<string, string>;
+
 const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
   const [stepAtual, setStepAtual] = useState(0);
-  const [csvData, setCsvData] = useState<any[]>([]);
+  const [csvData, setCsvData] = useState<CsvRow[]>([]);
   const [colunas, setColunas] = useState<string[]>([]);
   const [colLatitude, setColLatitude] = useState<string | undefined>();
   const [colLongitude, setColLongitude] = useState<string | undefined>();
@@ -40,15 +43,17 @@ const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
   const [tamanhoArquivo, setTamanhoArquivo] = useState<string | null>(null);
 
   const [messageApi, contextHolder] = useMessage();
-
   const { criarConjunto } = useConjuntos();
 
   const handleArquivo = (file: File) => {
-    Papa.parse(file, {
+    Papa.parse<CsvRow>(file, {
       header: true,
       skipEmptyLines: true,
-      complete: (results: any) => {
-        const data = results.data as any[];
+      complete: (results) => {
+        const data = results.data;
+        if (data.length === 0) {
+          return message.error("Arquivo CSV vazio.");
+        }
         setCsvData(data);
         setColunas(Object.keys(data[0]));
         messageApi.success("CSV carregado com sucesso!");
@@ -268,7 +273,7 @@ const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
               ]}
               dataSource={csvData.slice(0, 5).map((item, index) => ({
                 ...item,
-                id: usarIdPersonalizado ? item[colunaId] : `auto-${index}`,
+                id: usarIdPersonalizado ? item[colunaId!] : `auto-${index}`,
               }))}
               rowKey="id"
               pagination={false}
