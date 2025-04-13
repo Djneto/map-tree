@@ -62,6 +62,7 @@ const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
 
     return false; // impede upload automático
   };
+
   const finalizar = () => {
     if (!colLatitude || !colLongitude) {
       return message.error("Selecione colunas para latitude e longitude.");
@@ -98,11 +99,7 @@ const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
         </Steps>
 
         {stepAtual === 0 && (
-          <div
-            style={{
-              padding: 24,
-            }}
-          >
+          <div style={{ padding: 24 }}>
             {!csvData?.length ? (
               <Upload.Dragger
                 beforeUpload={handleArquivo}
@@ -166,13 +163,7 @@ const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
         )}
 
         {stepAtual === 1 && (
-          <Form
-            layout="vertical"
-            style={{
-              width: "100%",
-              padding: 24,
-            }}
-          >
+          <Form layout="vertical" style={{ width: "100%", padding: 24 }}>
             <Typography.Title level={4}>
               Configurar colunas do dataset
             </Typography.Title>
@@ -189,9 +180,9 @@ const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
                 placeholder="Selecione a coluna de latitude"
               >
                 {colunas.map((col) => (
-                  <Select.Option key={col} value={col}>
+                  <Option key={col} value={col}>
                     {col}
-                  </Select.Option>
+                  </Option>
                 ))}
               </Select>
             </Form.Item>
@@ -203,9 +194,9 @@ const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
                 placeholder="Selecione a coluna de longitude"
               >
                 {colunas.map((col) => (
-                  <Select.Option key={col} value={col}>
+                  <Option key={col} value={col}>
                     {col}
-                  </Select.Option>
+                  </Option>
                 ))}
               </Select>
             </Form.Item>
@@ -230,15 +221,21 @@ const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
                   placeholder="Selecione a coluna que será usada como ID"
                 >
                   {colunas.map((col) => (
-                    <Select.Option key={col} value={col}>
+                    <Option key={col} value={col}>
                       {col}
-                    </Select.Option>
+                    </Option>
                   ))}
                 </Select>
               </Form.Item>
             )}
 
             <Form.Item style={{ textAlign: "right", marginTop: 24 }}>
+              <Button
+                onClick={() => setStepAtual(0)}
+                style={{ marginRight: 8 }}
+              >
+                Voltar
+              </Button>
               <Button
                 type="primary"
                 onClick={() => setStepAtual(2)}
@@ -255,11 +252,7 @@ const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
         )}
 
         {stepAtual === 2 && (
-          <div
-            style={{
-              padding: 24,
-            }}
-          >
+          <div style={{ padding: 24 }}>
             <Typography.Title level={4}>Revisar dados</Typography.Title>
             <Typography.Paragraph type="secondary" style={{ marginBottom: 16 }}>
               Confira abaixo um preview das primeiras linhas do seu dataset
@@ -269,11 +262,7 @@ const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
 
             <Table
               columns={[
-                {
-                  title: "ID",
-                  dataIndex: "id",
-                  key: "id",
-                },
+                { title: "ID", dataIndex: "id", key: "id" },
                 { title: "Latitude", dataIndex: colLatitude, key: "lat" },
                 { title: "Longitude", dataIndex: colLongitude, key: "lng" },
               ]}
@@ -288,6 +277,12 @@ const DatasetUploaderModal: React.FC<Props> = ({ open, onClose }) => {
             />
 
             <div style={{ textAlign: "right", marginTop: 24 }}>
+              <Button
+                onClick={() => setStepAtual(1)}
+                style={{ marginRight: 8 }}
+              >
+                Voltar
+              </Button>
               <Button type="primary" onClick={finalizar}>
                 Criar Conjunto
               </Button>

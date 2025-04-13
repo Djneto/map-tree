@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { List, Button, Input, Space, Tooltip, ColorPicker } from "antd";
+import { List, Button, Input, Space, ColorPicker } from "antd";
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -69,13 +69,11 @@ const Conjuntos: React.FC = () => {
                 onChange={(e) => atualizarNome(item.id, e.target.value)}
                 style={{ flex: 1 }}
               />
-              <Tooltip title="Remover conjunto">
-                <Button
-                  danger
-                  icon={<DeleteOutlined />}
-                  onClick={() => removerConjunto(item.id)}
-                />
-              </Tooltip>
+              <Button
+                danger
+                icon={<DeleteOutlined />}
+                onClick={() => removerConjunto(item.id)}
+              />
             </div>
           </List.Item>
         )}

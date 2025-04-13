@@ -1,6 +1,6 @@
 "use client";
 
-import { Segmented, Button, Tooltip } from "antd";
+import { Segmented, Button } from "antd";
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -68,14 +68,12 @@ export default function FloatingActions({
         ]}
       />
 
-      <Tooltip title={theme === "dark" ? "Modo Claro" : "Modo Escuro"}>
-        <Button
-          type="text"
-          onClick={toggleTheme}
-          icon={theme == "dark" ? <SunOutlined /> : <MoonOutlined />}
-          style={{ fontSize: "18px" }}
-        />
-      </Tooltip>
+      <Button
+        type="text"
+        onClick={toggleTheme}
+        icon={theme == "dark" ? <SunOutlined /> : <MoonOutlined />}
+        style={{ fontSize: "18px" }}
+      />
     </div>
   );
 }

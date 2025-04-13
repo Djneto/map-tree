@@ -1,6 +1,6 @@
 "use client";
 
-import { Drawer, Button, Space, Segmented, Tooltip } from "antd";
+import { Drawer, Button, Space, Segmented } from "antd";
 import {
   CloseOutlined,
   AppstoreOutlined,
@@ -33,13 +33,11 @@ export default function MapDrawer({ open, setOpen }: MapDrawerProps) {
               <DeploymentUnitOutlined style={{ fontSize: 20 }} />
               Map-Tree
             </span>
-            <Tooltip title="Fechar painel">
-              <Button
-                type="text"
-                icon={<CloseOutlined />}
-                onClick={() => setOpen(false)}
-              />
-            </Tooltip>
+            <Button
+              type="text"
+              icon={<CloseOutlined />}
+              onClick={() => setOpen(false)}
+            />
           </div>
           <span style={{ fontSize: 12, color: "#888" }}>
             Calcule distâncias dinamicamente com KD-Tree
