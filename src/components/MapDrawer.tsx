@@ -3,12 +3,13 @@
 import { Drawer, Button, Space, Segmented } from "antd";
 import {
   CloseOutlined,
-  AppstoreOutlined,
+  ShareAltOutlined,
   InboxOutlined,
   DeploymentUnitOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
 import Conjuntos from "./Conjuntos";
+import Calculos from "./Calculos";
 
 type MapDrawerProps = {
   open: boolean;
@@ -56,11 +57,11 @@ export default function MapDrawer({ open, setOpen }: MapDrawerProps) {
           {
             label: (
               <Space>
-                <AppstoreOutlined />
-                Seleção
+                <ShareAltOutlined />
+                Cálculos
               </Space>
             ),
-            value: "selecaoo",
+            value: "calculos",
           },
           {
             label: (
@@ -87,14 +88,14 @@ export default function MapDrawer({ open, setOpen }: MapDrawerProps) {
         </>
       )}
 
-      {abaAtiva === "selecaoo" && (
-        <div>
+      {abaAtiva === "calculos" && (
+        <>
           <p style={{ marginBottom: 12, color: "#555" }}>
-            Use esta aba para visualizar ou interagir com elementos do mapa que
-            fazem parte dos conjuntos criados.
+            Utilize esta aba para calcular distâncias e rotas entre os conjuntos
+            exibidos no mapa.
           </p>
-          <p>Seleção (em desenvolvimento)</p>
-        </div>
+          <Calculos />
+        </>
       )}
     </Drawer>
   );
