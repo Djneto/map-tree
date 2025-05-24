@@ -49,7 +49,7 @@ export const ConjuntosProvider = ({ children }: { children: ReactNode }) => {
       dados: dados ?? [],
     };
     setConjuntos((prev) => [...prev, novo]);
-    console.log(conjuntos);
+    //console.log(conjuntos);
   };
 
   const atualizarCor = (id: string, cor: string) => {

@@ -10,6 +10,7 @@ import { DeploymentUnitOutlined } from "@ant-design/icons";
 import { ConjuntosProvider } from "@/contexts/ConjuntosContext";
 import { ActionProvider } from "@/contexts/ActionContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { CalculosProvider } from "@/contexts/CalculosContex";
 
 const FullScreenMap = dynamic(() => import("./FullScreenMap"), {
   ssr: false,
@@ -68,12 +69,14 @@ export default function AppWrapper() {
   return (
     <ConjuntosProvider>
       <ActionProvider>
-        <FullScreenMap />
-        <MapDrawer open={drawerOpen} setOpen={setDrawerOpen} />
-        <FloatingActions
-          drawerOpen={drawerOpen}
-          setDrawerOpen={setDrawerOpen}
-        />
+        <CalculosProvider>
+          <FullScreenMap />
+          <MapDrawer open={drawerOpen} setOpen={setDrawerOpen} />
+          <FloatingActions
+            drawerOpen={drawerOpen}
+            setDrawerOpen={setDrawerOpen}
+          />
+        </CalculosProvider>
       </ActionProvider>
     </ConjuntosProvider>
   );

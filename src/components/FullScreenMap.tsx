@@ -7,6 +7,7 @@ import {
   Marker,
   Popup,
   useMapEvents,
+  Polyline,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -15,6 +16,8 @@ import L from "leaflet";
 import { EnvironmentFilled } from "@ant-design/icons";
 import ReactDOMServer from "react-dom/server";
 import { useAction } from "@/contexts/ActionContext";
+import { useCalculos } from "@/contexts/CalculosContex";
+import { useEffect } from "react";
 
 interface MapaClickListenerProps {
   onClick: (lat: number, lng: number) => void;
@@ -28,6 +31,7 @@ const FullScreenMap = () => {
     removerDadoDoConjuntoSelecionado,
   } = useConjuntos();
   const { action } = useAction();
+  const { resultados } = useCalculos();
 
   const lightTile = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
   const darkTile =
@@ -52,6 +56,54 @@ const FullScreenMap = () => {
       popupAnchor: [0, -32],
     });
 
+  // const gerarPolylines = () => {
+  //   try {
+  //     return resultados.registrosRota.retorno.flatMap(
+  //       (rotaLista, registroIndex) => {
+  //         if (!Array.isArray(rotaLista)) {
+  //           console.warn("rotaLista não é array no índice:", registroIndex);
+  //           return [];
+  //         }
+
+  //         return rotaLista
+  //           .map((item, index) => {
+  //             if (!item.rota || !Array.isArray(item.rota.coordenadas)) {
+  //               console.warn("rota ou coordenadas inválidas no índice:", index);
+  //               return null;
+  //             }
+
+  //             const path: [number, number][] = item.rota.coordenadas
+  //               .filter(
+  //                 (coord): coord is [number, number] =>
+  //                   Array.isArray(coord) && coord.length === 2
+  //               )
+  //               .map(([lng, lat]) => [lat, lng]); // inverte para [lat, lng]
+
+  //             if (path.length === 0) {
+  //               console.warn("path vazio no índice:", index);
+  //               return null;
+  //             }
+
+  //             return (
+  //               <Polyline
+  //                 key={`polyline-${registroIndex}-${index}`}
+  //                 positions={path}
+  //                 color="#0F53FF"
+  //                 weight={6}
+  //                 opacity={0.7}
+  //               />
+  //             );
+  //           })
+  //           .filter(Boolean); // remove os nulls
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error("Erro na gerarPolylines:", error);
+  //     return [];
+  //   }
+  // };
+  useEffect(() => {}, [resultados]);
+
   const MapaClickListener = ({ onClick }: MapaClickListenerProps) => {
     useMapEvents({
       click(e) {
@@ -67,7 +119,7 @@ const FullScreenMap = () => {
     if (action === "add") {
       adicionarDadoAoConjuntoSelecionado(lat.toString(), lng.toString());
     }
-    console.log("Clicou em:", lat, lng);
+    //console.log("Clicou em:", lat, lng);
   };
 
   return (
@@ -88,7 +140,7 @@ const FullScreenMap = () => {
           }
         />
         <ZoomControl position="topright" />
-
+        {/* {gerarPolylines()} */}
         {conjuntos.map((conjunto) =>
           conjunto.dados.map((dado) => (
             <Marker

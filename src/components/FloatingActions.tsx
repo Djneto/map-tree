@@ -32,9 +32,9 @@ export default function FloatingActions({
 
   const { action, setAction } = useAction();
 
-  useEffect(() => {
-    console.log(conjuntoSelecionado);
-  });
+  // useEffect(() => {
+  //   console.log(conjuntoSelecionado);
+  // });
 
   useEffect(() => {
     // Verifica se o conjunto selecionado ainda existe

@@ -1,13 +1,5 @@
-import React, { useState } from "react";
-import {
-  Typography,
-  Select,
-  Button,
-  message,
-  InputNumber,
-  Radio,
-  Space,
-} from "antd";
+import React, { useEffect } from "react";
+import { Typography, Select, Button, InputNumber, Radio, Space } from "antd";
 import {
   AimOutlined,
   PlayCircleOutlined,
@@ -18,42 +10,35 @@ import {
 } from "@ant-design/icons";
 import { useConjuntos } from "@/contexts/ConjuntosContext";
 
+import { useCalculos } from "@/contexts/CalculosContex";
+
 const { Text } = Typography;
 const { Option } = Select;
 
 const Calculos: React.FC = () => {
   const { conjuntos } = useConjuntos();
 
-  const [tipoOperacao, setTipoOperacao] = useState<"distancia" | "rota">(
-    "distancia"
-  );
-  const [tipoDistancia, setTipoDistancia] = useState<"menor" | "raio">("menor");
+  const {
+    resultados,
+    calcular,
+    tipoOperacao,
+    setTipoOperacao,
+    tipoDistancia,
+    setTipoDistancia,
+    origemId,
+    setOrigemId,
+    destinoId,
+    setDestinoId,
+    raioKm,
+    setRaioKm,
+  } = useCalculos();
 
-  const [origemId, setOrigemId] = useState<string>();
-  const [destinoId, setDestinoId] = useState<string>();
-  const [raioKm, setRaioKm] = useState<number>(1);
+  useEffect(() => {
+    console.log(resultados);
+  }, [resultados]);
 
-  const calcular = () => {
-    if (!origemId || !destinoId) {
-      message.warning("Selecione um conjunto de origem e destino.");
-      return;
-    }
-
-    if (tipoDistancia === "raio" && (!raioKm || raioKm <= 0)) {
-      message.warning("Informe um valor válido para o raio.");
-      return;
-    }
-
-    const payload = {
-      origem: origemId,
-      destino: destinoId,
-      tipoOperacao,
-      tipoDistancia,
-      raioKm: tipoDistancia === "raio" ? raioKm : undefined,
-    };
-
-    console.log("Parâmetros de cálculo:", payload);
-    message.success("Cálculo iniciado!");
+  const handleCalcular = async () => {
+    await calcular();
   };
 
   return (
@@ -189,7 +174,7 @@ const Calculos: React.FC = () => {
           type="primary"
           icon={<PlayCircleOutlined />}
           block
-          onClick={calcular}
+          onClick={handleCalcular}
         >
           Calcular
         </Button>

@@ -18,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        <AntdCompat />
         <ThemeProvider>
-          <AntdThemeProvider>{children}</AntdThemeProvider>
+          <AntdThemeProvider>
+            <AntdCompat />
+            {children}
+          </AntdThemeProvider>
         </ThemeProvider>
       </body>
     </html>
