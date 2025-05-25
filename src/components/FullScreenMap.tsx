@@ -111,7 +111,6 @@ const FullScreenMap = () => {
             parseFloat(origem.longitude),
           ];
 
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return destinos.map(
             (
               dest: { destino: { latitude: string; longitude: string } },

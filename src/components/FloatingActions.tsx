@@ -45,7 +45,7 @@ export default function FloatingActions({
       setConjuntoSelecionado(null);
       setAction("select");
     }
-  }, [conjuntos]);
+  }, [conjuntoSelecionado, conjuntos, setAction, setConjuntoSelecionado]);
 
   return (
     <div
