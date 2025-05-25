@@ -3,7 +3,7 @@
 import { Drawer, Button, Space, Segmented } from "antd";
 import {
   CloseOutlined,
-  ShareAltOutlined,
+  CodeSandboxOutlined,
   InboxOutlined,
   DeploymentUnitOutlined,
 } from "@ant-design/icons";
@@ -57,7 +57,7 @@ export default function MapDrawer({ open, setOpen }: MapDrawerProps) {
           {
             label: (
               <Space>
-                <ShareAltOutlined />
+                <CodeSandboxOutlined />
                 Cálculos
               </Space>
             ),

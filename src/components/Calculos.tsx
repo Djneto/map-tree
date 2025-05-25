@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Typography, Select, Button, InputNumber, Radio, Space } from "antd";
 import {
   AimOutlined,
@@ -11,6 +11,7 @@ import {
 import { useConjuntos } from "@/contexts/ConjuntosContext";
 
 import { useCalculos } from "@/contexts/CalculosContex";
+import ListaRegistros from "./ListaRegistros";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -31,11 +32,18 @@ const Calculos: React.FC = () => {
     setDestinoId,
     raioKm,
     setRaioKm,
+    registrosVisualizados,
+    visualizarRegistro,
+    removerRegistro,
   } = useCalculos();
 
-  useEffect(() => {
-    console.log(resultados);
-  }, [resultados]);
+  // useEffect(() => {
+  //   console.log(resultados);
+  // }, [resultados]);
+
+  // useEffect(() => {
+  //   console.log(registrosVisualizados);
+  // }, [registrosVisualizados]);
 
   const handleCalcular = async () => {
     await calcular();
@@ -178,6 +186,36 @@ const Calculos: React.FC = () => {
         >
           Calcular
         </Button>
+        {(resultados.registrosDistancia.length > 0 ||
+          resultados.registrosRota.length > 0) && (
+          <div style={{ marginTop: 10 }}>
+            <Text strong>Registros de Cálculo:</Text>
+
+            {resultados.registrosDistancia.length > 0 && (
+              <div style={{ marginTop: 12 }}>
+                <ListaRegistros
+                  registros={resultados.registrosDistancia}
+                  registrosVisualizados={registrosVisualizados}
+                  tipo="distancia"
+                  onVisualizar={visualizarRegistro}
+                  onRemover={removerRegistro}
+                />
+              </div>
+            )}
+
+            {resultados.registrosRota.length > 0 && (
+              <div style={{ marginTop: 12 }}>
+                <ListaRegistros
+                  registros={resultados.registrosRota}
+                  registrosVisualizados={registrosVisualizados}
+                  tipo="rota"
+                  onVisualizar={visualizarRegistro}
+                  onRemover={removerRegistro}
+                />
+              </div>
+            )}
+          </div>
+        )}
       </Space>
     </div>
   );

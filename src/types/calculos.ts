@@ -3,6 +3,7 @@ import { DadoGeografico } from "./dadoGeografico";
 export type ResultadoCalculoDistancia = {
   id: string;
   tipoCalculo: "menor" | "raio";
+  raioKm?: number;
   origem: DadoGeografico;
   destinos: Array<{
     destino: DadoGeografico;
@@ -24,7 +25,14 @@ export type ResultadoCalculoRota = {
   };
 };
 
+export type GrupoResultadoRota = {
+  id: string;
+  tipoCalculo: "menor" | "raio";
+  raioKm?: number;
+  rotas: ResultadoCalculoRota[];
+};
+
 export type ListaRegistros = {
   registrosDistancia: ResultadoCalculoDistancia[];
-  registrosRota: ResultadoCalculoRota[];
+  registrosRota: GrupoResultadoRota[];
 };

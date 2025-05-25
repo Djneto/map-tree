@@ -5,16 +5,21 @@ import { calcularDistancia } from "@/services/api/calculo.service";
 import { calcularRota } from "@/services/api/rota.service";
 import { useConjuntos } from "./ConjuntosContext";
 import {
+  GrupoResultadoRota,
   ListaRegistros,
   ResultadoCalculoDistancia,
   ResultadoCalculoRota,
 } from "@/types/calculos";
 
+type RegistroComTipoERaio =
+  | { tipo: "distancia"; registro: ResultadoCalculoDistancia; raioKm?: number }
+  | { tipo: "rota"; registro: GrupoResultadoRota; raioKm?: number };
+
 type CalculosContextType = {
   resultados: ListaRegistros;
-  tipoOperacao: string;
+  tipoOperacao: "distancia" | "rota";
   setTipoOperacao: React.Dispatch<React.SetStateAction<"distancia" | "rota">>;
-  tipoDistancia: string;
+  tipoDistancia: "menor" | "raio";
   setTipoDistancia: React.Dispatch<React.SetStateAction<"menor" | "raio">>;
   origemId: string | undefined;
   setOrigemId: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -23,6 +28,10 @@ type CalculosContextType = {
   raioKm: number;
   setRaioKm: React.Dispatch<React.SetStateAction<number>>;
   calcular: () => Promise<void>;
+  registrosVisualizados: string[];
+  visualizarRegistro: (id: string) => void;
+  removerRegistro: (id: string) => void;
+  obterRegistroPorId: (id: string) => RegistroComTipoERaio | undefined;
 };
 
 const CalculosContext = createContext<CalculosContextType | undefined>(
@@ -39,10 +48,17 @@ export const CalculosProvider: React.FC<{ children: ReactNode }> = ({
   const [origemId, setOrigemId] = useState<string | undefined>();
   const [destinoId, setDestinoId] = useState<string | undefined>();
   const [raioKm, setRaioKm] = useState<number>(1);
+  const [registrosVisualizados, setRegistrosVisualizados] = useState<string[]>(
+    []
+  );
   const [resultados, setResultados] = useState<ListaRegistros>({
     registrosDistancia: [],
     registrosRota: [],
   });
+  const [registroSelecionadoId, setRegistroSelecionadoId] = useState<
+    string | undefined
+  >();
+
   const { conjuntos } = useConjuntos();
 
   const calcular = async () => {
@@ -89,12 +105,15 @@ export const CalculosProvider: React.FC<{ children: ReactNode }> = ({
           ...resultadoBruto,
           id: uuidv4(),
           tipoCalculo: tipoDistancia,
+          raioKm: tipoDistancia === "raio" ? raioKm : undefined,
         };
 
         setResultados((prev) => ({
           ...prev,
           registrosDistancia: [...prev.registrosDistancia, resultadoComId],
         }));
+
+        setRegistrosVisualizados((prev) => [...prev, resultadoComId.id]);
       } else {
         const resultadoComIds: ResultadoCalculoRota[] = (
           resultadoBruto as ResultadoCalculoRota[]
@@ -104,10 +123,19 @@ export const CalculosProvider: React.FC<{ children: ReactNode }> = ({
           tipoCalculo: tipoDistancia,
         }));
 
+        const grupoDeRotas: GrupoResultadoRota = {
+          id: uuidv4(),
+          tipoCalculo: tipoDistancia,
+          raioKm: tipoDistancia === "raio" ? raioKm : undefined,
+          rotas: resultadoComIds,
+        };
+
         setResultados((prev) => ({
           ...prev,
-          registrosRota: [...prev.registrosRota, ...resultadoComIds],
+          registrosRota: [...prev.registrosRota, grupoDeRotas],
         }));
+
+        setRegistrosVisualizados((prev) => [...prev, grupoDeRotas.id]);
       }
 
       message.success("Cálculo finalizado com sucesso!");
@@ -117,6 +145,49 @@ export const CalculosProvider: React.FC<{ children: ReactNode }> = ({
         "Erro: " + ((error as Error).message || "Erro desconhecido")
       );
     }
+  };
+
+  const visualizarRegistro = (id: string) => {
+    setRegistrosVisualizados((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const removerRegistro = (id: string) => {
+    setResultados((prev) => ({
+      registrosDistancia: prev.registrosDistancia.filter((r) => r.id !== id),
+      registrosRota: prev.registrosRota.filter((g) => g.id !== id),
+    }));
+
+    setRegistrosVisualizados((prev) => prev.filter((vid) => vid !== id));
+
+    if (registroSelecionadoId === id) {
+      setRegistroSelecionadoId(undefined);
+    }
+  };
+
+  const obterRegistroPorId = (id: string): RegistroComTipoERaio | undefined => {
+    const registroDistancia = resultados.registrosDistancia.find(
+      (r) => r.id === id
+    );
+    if (registroDistancia) {
+      return {
+        tipo: "distancia",
+        registro: registroDistancia,
+        ...(registroDistancia.raioKm && { raioKm: registroDistancia.raioKm }),
+      };
+    }
+
+    const grupoRota = resultados.registrosRota.find((g) => g.id === id);
+    if (grupoRota) {
+      return {
+        tipo: "rota",
+        registro: grupoRota,
+        ...(grupoRota.raioKm && { raioKm: grupoRota.raioKm }),
+      };
+    }
+
+    return undefined;
   };
 
   return (
@@ -134,6 +205,10 @@ export const CalculosProvider: React.FC<{ children: ReactNode }> = ({
         setDestinoId,
         raioKm,
         setRaioKm,
+        registrosVisualizados,
+        visualizarRegistro,
+        removerRegistro,
+        obterRegistroPorId,
       }}
     >
       {children}

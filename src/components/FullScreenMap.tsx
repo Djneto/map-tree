@@ -12,7 +12,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useConjuntos } from "@/contexts/ConjuntosContext";
-import L from "leaflet";
+import L, { LatLngTuple } from "leaflet";
 import { EnvironmentFilled } from "@ant-design/icons";
 import ReactDOMServer from "react-dom/server";
 import { useAction } from "@/contexts/ActionContext";
@@ -31,7 +31,8 @@ const FullScreenMap = () => {
     removerDadoDoConjuntoSelecionado,
   } = useConjuntos();
   const { action } = useAction();
-  const { resultados } = useCalculos();
+  const { resultados, registrosVisualizados, obterRegistroPorId } =
+    useCalculos();
 
   const lightTile = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
   const darkTile =
@@ -55,53 +56,6 @@ const FullScreenMap = () => {
       iconAnchor: [16, 32],
       popupAnchor: [0, -32],
     });
-
-  // const gerarPolylines = () => {
-  //   try {
-  //     return resultados.registrosRota.retorno.flatMap(
-  //       (rotaLista, registroIndex) => {
-  //         if (!Array.isArray(rotaLista)) {
-  //           console.warn("rotaLista não é array no índice:", registroIndex);
-  //           return [];
-  //         }
-
-  //         return rotaLista
-  //           .map((item, index) => {
-  //             if (!item.rota || !Array.isArray(item.rota.coordenadas)) {
-  //               console.warn("rota ou coordenadas inválidas no índice:", index);
-  //               return null;
-  //             }
-
-  //             const path: [number, number][] = item.rota.coordenadas
-  //               .filter(
-  //                 (coord): coord is [number, number] =>
-  //                   Array.isArray(coord) && coord.length === 2
-  //               )
-  //               .map(([lng, lat]) => [lat, lng]); // inverte para [lat, lng]
-
-  //             if (path.length === 0) {
-  //               console.warn("path vazio no índice:", index);
-  //               return null;
-  //             }
-
-  //             return (
-  //               <Polyline
-  //                 key={`polyline-${registroIndex}-${index}`}
-  //                 positions={path}
-  //                 color="#0F53FF"
-  //                 weight={6}
-  //                 opacity={0.7}
-  //               />
-  //             );
-  //           })
-  //           .filter(Boolean); // remove os nulls
-  //       }
-  //     );
-  //   } catch (error) {
-  //     console.error("Erro na gerarPolylines:", error);
-  //     return [];
-  //   }
-  // };
   useEffect(() => {}, [resultados]);
 
   const MapaClickListener = ({ onClick }: MapaClickListenerProps) => {
@@ -122,6 +76,70 @@ const FullScreenMap = () => {
     //console.log("Clicou em:", lat, lng);
   };
 
+  const gerarPolylines = () => {
+    return registrosVisualizados.flatMap((id) => {
+      const retorno = obterRegistroPorId(id);
+      if (retorno?.tipo === "rota") {
+        return retorno.registro.rotas.map((rota) => {
+          const pontos = rota.rota.coordenadas.map(
+            ([lng, lat]) => [lat, lng] as LatLngTuple
+          );
+          return (
+            <Polyline
+              key={rota.id}
+              positions={pontos}
+              color="blue"
+              weight={4}
+              opacity={1}
+            />
+          );
+        });
+      }
+      if (retorno?.tipo === "distancia") {
+        const keys = Object.keys(retorno.registro).filter(
+          (k) => !isNaN(Number(k))
+        );
+
+        return keys.flatMap((key, index) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const origem = (retorno.registro as any)[key].origem;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const destinos = (retorno.registro as any)[key].destinos;
+
+          const origemCoord: LatLngTuple = [
+            parseFloat(origem.latitude),
+            parseFloat(origem.longitude),
+          ];
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return destinos.map(
+            (
+              dest: { destino: { latitude: string; longitude: string } },
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              i: any
+            ) => {
+              const destinoCoord: LatLngTuple = [
+                parseFloat(dest.destino.latitude),
+                parseFloat(dest.destino.longitude),
+              ];
+
+              return (
+                <Polyline
+                  key={`${retorno.registro.id}-${index}-${i}`}
+                  positions={[origemCoord, destinoCoord]}
+                  color="red"
+                  weight={4}
+                  opacity={1}
+                />
+              );
+            }
+          );
+        });
+      }
+      return []; // caso não seja tipo "rota", não renderiza nada
+    });
+  };
+
   return (
     <div style={{ height: "100vh", width: "100vw", position: "relative" }}>
       <MapContainer
@@ -140,7 +158,7 @@ const FullScreenMap = () => {
           }
         />
         <ZoomControl position="topright" />
-        {/* {gerarPolylines()} */}
+        {gerarPolylines()}
         {conjuntos.map((conjunto) =>
           conjunto.dados.map((dado) => (
             <Marker
