@@ -1,6 +1,6 @@
 import { DadoGeografico } from "@/types/dadoGeografico";
 
-const API_KEY = process.env.NEXT_PUBLIC_ORS_API_KEY!;
+const API_KEY = process.env.ORS_API_KEY!;
 
 export async function buscarRota(
   origem: DadoGeografico,
