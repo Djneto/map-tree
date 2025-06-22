@@ -52,7 +52,6 @@ const Calculos: React.FC = () => {
   return (
     <div style={{ width: "100%" }}>
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
-        {/* Tipo de operação */}
         <div>
           <Text strong>
             <PartitionOutlined /> Tipo de Cálculo:
@@ -74,7 +73,6 @@ const Calculos: React.FC = () => {
           </Radio.Group>
         </div>
 
-        {/* Origem e Destino com layout visual */}
         <div style={{ display: "flex", width: "100%", alignItems: "center" }}>
           <div
             style={{
@@ -92,7 +90,6 @@ const Calculos: React.FC = () => {
             <AimOutlined style={{ fontSize: 18 }} />
           </div>
 
-          {/* Coluna de selects */}
           <div
             style={{
               display: "flex",
@@ -131,7 +128,6 @@ const Calculos: React.FC = () => {
           </div>
         </div>
 
-        {/* Opções de distância ou rota */}
         {(tipoOperacao === "distancia" || tipoOperacao === "rota") && (
           <div>
             <Text strong>
@@ -175,8 +171,6 @@ const Calculos: React.FC = () => {
             </div>
           </div>
         )}
-
-        {/* <Divider /> */}
 
         <Button
           type="primary"

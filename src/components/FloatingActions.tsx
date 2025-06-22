@@ -11,7 +11,7 @@ import {
 import { useEffect } from "react";
 import { Button, Segmented, Select } from "antd";
 import { useTheme } from "@/contexts/ThemeContext";
-import { useConjuntos } from "@/contexts/ConjuntosContext"; // ou onde quer que esteja
+import { useConjuntos } from "@/contexts/ConjuntosContext";
 
 import "../styles/globals.css";
 import { Conjunto } from "@/types/conjunto";
