@@ -132,8 +132,6 @@ map-tree/
 ## Observações
 
 - **Projeto educacional:** O foco é o aprendizado de conceitos de geolocalização, manipulação de dados e desenvolvimento web moderno.
-- **Privacidade:** Todos os dados permanecem no navegador do usuário.
-- **Sem backend:** Não há persistência em banco de dados ou integração com APIs externas.
 
 ---
 
